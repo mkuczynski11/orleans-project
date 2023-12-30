@@ -67,8 +67,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapIdentityApi<IdentityUser>();
 
-app.UseHttpsRedirection();
-
 app.MapControllers();
 
 app.UseCors(AllowCors);

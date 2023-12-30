@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace OrleansProject.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     public class WeatherForecastController : ControllerBase
     {
