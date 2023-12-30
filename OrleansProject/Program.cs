@@ -1,12 +1,26 @@
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Orleans.Runtime;
 using OrleansProject.Data;
 using Swashbuckle.AspNetCore.Filters;
 
+var AllowCors = "AllowCors";
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// CORS settings to allow frontend to make calls
+// TODO: Create production/dev env
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: AllowCors,
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -30,7 +44,12 @@ builder.Host.UseOrleans(siloBuilder =>
     siloBuilder.AddMemoryGrainStorage("users");
 });
 
+// Database creation
+// TODO: Replace with SQL Server db
+
 builder.Services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase("AppDb"));
+
+// Authentication setup
 
 builder.Services.AddAuthentication();
 
@@ -51,5 +70,7 @@ app.MapIdentityApi<IdentityUser>();
 app.UseHttpsRedirection();
 
 app.MapControllers();
+
+app.UseCors(AllowCors);
 
 app.Run();
